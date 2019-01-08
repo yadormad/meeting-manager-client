@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">meeting-manager-client</string>
+    <string name="login_btn">Login</string>
+    <string name="login_hint">login</string>
+    <string name="password_hint">password</string>
+    <string name="register_btn">Register</string>
+    <string name="incorrectLoginCreds">Login and/or password are incorrect</string>
+    <string name="checkYourConnection">Chec your Intenet connection</string>
+    <string name="serverError">Error occured on server</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="repeat_password_hint">repeat password</string>
+    <string name="passwords_not_matching">Passwords don\'t match</string>
+    <string name="stub">stub</string>
+    <string name="person_action_btn_accept">Accept</string>
+    <string name="person_action_btn_decline">Decline</string>
+    <string name="person_action_btn_create_person">Create person</string>
+    <string name="SUCCESS">SUCCESS</string>
+</resources>
