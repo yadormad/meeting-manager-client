@@ -15,4 +15,6 @@
     <string name="person_action_btn_decline">Decline</string>
     <string name="person_action_btn_create_person">Create person</string>
     <string name="SUCCESS">SUCCESS</string>
+    <string name="export_in_csv">Export in csv</string>
+    <string name="install_file_manager">Please install a File Manager.</string>
 </resources>

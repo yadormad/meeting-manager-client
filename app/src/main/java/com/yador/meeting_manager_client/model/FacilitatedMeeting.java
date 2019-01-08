@@ -1,6 +1,7 @@
 package com.yador.meeting_manager_client.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class FacilitatedMeeting {
 
@@ -8,6 +9,7 @@ public class FacilitatedMeeting {
     private String name;
     private Date startDate;
     private String meetingPriority;
+    private String description;
 
     public Integer getId() {
         return id;
@@ -39,5 +41,30 @@ public class FacilitatedMeeting {
 
     public void setMeetingPriority(String meetingPriority) {
         this.meetingPriority = meetingPriority;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FacilitatedMeeting that = (FacilitatedMeeting) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(meetingPriority, that.meetingPriority);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, startDate, meetingPriority);
     }
 }

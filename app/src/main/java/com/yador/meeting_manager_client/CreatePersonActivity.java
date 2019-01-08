@@ -83,12 +83,12 @@ public class CreatePersonActivity extends AppCompatActivity {
         createdPerson.setFullName(fullNameEditText.getText().toString());
         createdPerson.setPosition((Position) positionSpinner.getSelectedItem());
 
-        meetingsApi.createPerson(createdPerson).enqueue(new Callback<Integer>() {
+        meetingsApi.createPerson(createdPerson).enqueue(new Callback<Person>() {
             @Override
-            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+            public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
                 switch (response.code()) {
                     case 200:
-                        ((AuthModel)Dependency.getInstance().getDependency(AUTHMODEL)).setUserId(response.body());
+                        ((AuthModel)Dependency.getInstance().getDependency(AUTHMODEL)).setPerson(response.body());
                         onBackPressed();
                         break;
                     case 401:
@@ -101,7 +101,7 @@ public class CreatePersonActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
                 Toast.makeText(getApplicationContext(), R.string.checkYourConnection, Toast.LENGTH_LONG).show();
                 Log.e("fuck","networking again", t);
             }

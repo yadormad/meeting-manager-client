@@ -20,6 +20,9 @@ public interface MeetingsApi {
     @GET("meetings/all")
     Call<List<FacilitatedMeeting>> getAllMeetings();
 
+    @GET("meetings/all/detailed")
+    Call<List<Meeting>> getAllDetailedMeetings();
+
     @GET("meetings/detailed/{id}")
     Call<Meeting> getMeetingsById(@Path("id") int id);
 
@@ -27,7 +30,7 @@ public interface MeetingsApi {
     Call<List<Position>> getAllPositions();
 
     @POST("users/person/create")
-    Call<Integer> createPerson(@Body Person person);
+    Call<Person> createPerson(@Body Person person);
 
     @PUT("meetings/{id}")
     Call<Void> editMeeting(@Body Meeting meeting, @Path("id") int id);
@@ -40,4 +43,5 @@ public interface MeetingsApi {
 
     @DELETE("meetings/{id}")
     Call<Void> deleteMeetingById(@Path("id") int id);
+
 }

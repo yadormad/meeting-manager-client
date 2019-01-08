@@ -8,17 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.yador.meeting_manager_client.model.FacilitatedMeeting;
-import com.yador.meeting_manager_client.model.Meeting;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.MeetingViewHolder> {
+public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.MeetingViewHolder> implements Filterable {
 
+    private List<FacilitatedMeeting> filteredMeetings = new ArrayList<>();
     private List<FacilitatedMeeting> meetings = new ArrayList<>();
     private Context mContext;
 
@@ -49,6 +50,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.Meetin
     public void refreshMeetings(List<FacilitatedMeeting> freshMeetings) {
         if(!meetings.equals(freshMeetings)) {
             meetings = freshMeetings;
+            filteredMeetings = freshMeetings;
             notifyDataSetChanged();
         }
     }
@@ -63,12 +65,12 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.Meetin
 
     @Override
     public void onBindViewHolder(@NonNull final MeetingViewHolder meetingViewHolder, int i) {
-        meetingViewHolder.bind(meetings.get(i));
+        meetingViewHolder.bind(filteredMeetings.get(i));
         meetingViewHolder.mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MeetingDetailsActivity.class);
-                intent.putExtra("meeting_id", meetings.get(meetingViewHolder.getAdapterPosition()).getId());
+                intent.putExtra("meeting_id", filteredMeetings.get(meetingViewHolder.getAdapterPosition()).getId());
                 mContext.startActivity(intent);
             }
         });
@@ -76,6 +78,36 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.Meetin
 
     @Override
     public int getItemCount() {
-        return meetings.size();
+        return filteredMeetings.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String charString = constraint.toString();
+                if (charString.isEmpty()) {
+                    filteredMeetings = meetings;
+                } else {
+                    List<FacilitatedMeeting> filteredList = new ArrayList<>();
+                    for (FacilitatedMeeting row : meetings) {
+                        if (row.getDescription().toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(row);
+                        }
+                    }
+                    filteredMeetings = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredMeetings;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                filteredMeetings = (ArrayList<FacilitatedMeeting>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

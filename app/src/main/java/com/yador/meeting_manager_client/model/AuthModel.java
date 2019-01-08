@@ -1,20 +1,20 @@
 package com.yador.meeting_manager_client.model;
 
 public class AuthModel {
-    private Integer userId;
     private String token;
+    private Person person;
 
-    public AuthModel(Integer userId, String token) {
-        this.userId = userId;
+    public AuthModel(String token, Person person) {
         this.token = token;
+        this.person = person;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public String getToken() {

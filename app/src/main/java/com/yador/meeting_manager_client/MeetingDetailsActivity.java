@@ -99,7 +99,7 @@ public class MeetingDetailsActivity extends AppCompatActivity {
                 meeting.getEndDate().getTime(),
                 DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR
                         | DateUtils.FORMAT_SHOW_TIME));
-        if(authModel.getUserId() == null) {
+        if(authModel.getPerson() == null) {
             setCreatePersonButton();
         } else if(isCurrentInParticipants()) {
             setDeclineMeetingButton();
@@ -113,7 +113,30 @@ public class MeetingDetailsActivity extends AppCompatActivity {
         personActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo accept request
+            meeting.getParticipants().add(authModel.getPerson());
+            meetingsApi.editMeeting(meeting, meeting.getId()).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    switch (response.code()) {
+                        case 200:
+                            Toast.makeText(getApplicationContext(), R.string.SUCCESS, Toast.LENGTH_LONG).show();
+                            onBackPressed();
+                            break;
+                        case 401:
+                            Toast.makeText(getApplicationContext(), R.string.incorrectLoginCreds, Toast.LENGTH_LONG).show();
+                            toLogin();
+                            break;
+                        default:
+                            Toast.makeText(getApplicationContext(), R.string.serverError, Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    Toast.makeText(getApplicationContext(), R.string.checkYourConnection, Toast.LENGTH_LONG).show();
+                    Log.e("fuck","networking again", t);
+                }
+            });
             }
         });
     }
@@ -123,7 +146,30 @@ public class MeetingDetailsActivity extends AppCompatActivity {
         personActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo decline request
+                meeting.getParticipants().remove(authModel.getPerson());
+                meetingsApi.editMeeting(meeting, meeting.getId()).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                        switch (response.code()) {
+                            case 200:
+                                Toast.makeText(getApplicationContext(), R.string.SUCCESS, Toast.LENGTH_LONG).show();
+                                onBackPressed();
+                                break;
+                            case 401:
+                                Toast.makeText(getApplicationContext(), R.string.incorrectLoginCreds, Toast.LENGTH_LONG).show();
+                                toLogin();
+                                break;
+                            default:
+                                Toast.makeText(getApplicationContext(), R.string.serverError, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        Toast.makeText(getApplicationContext(), R.string.checkYourConnection, Toast.LENGTH_LONG).show();
+                        Log.e("fuck","networking again", t);
+                    }
+                });
             }
         });
     }
@@ -141,7 +187,7 @@ public class MeetingDetailsActivity extends AppCompatActivity {
 
     private boolean isCurrentInParticipants() {
         for(Person participant:meeting.getParticipants()) {
-            if(participant.getId() == authModel.getUserId()) return true;
+            if(participant.getId() == authModel.getPerson().getId()) return true;
         }
         return false;
     }
