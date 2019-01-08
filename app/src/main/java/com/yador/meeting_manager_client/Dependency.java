@@ -6,7 +6,6 @@ import com.yador.meeting_manager_client.rest.LoginApi;
 import com.yador.meeting_manager_client.rest.MeetingsApi;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

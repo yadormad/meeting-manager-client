@@ -5,10 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.provider.DocumentFile;
@@ -28,11 +26,6 @@ import com.yador.meeting_manager_client.model.FacilitatedMeeting;
 import com.yador.meeting_manager_client.model.Meeting;
 import com.yador.meeting_manager_client.rest.MeetingsApi;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
@@ -51,12 +44,9 @@ import static com.yador.meeting_manager_client.Dependency.Dependencies.MODEL;
 public class MeetingActivity extends AppCompatActivity {
 
     private Dependency dependency;
-    private RecyclerView meetingsRecyclerView;
     private MeetingsAdapter meetingsAdapter;
     private MeetingsApi meetingsApi;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private BroadcastReceiver broadcastReceiver;
-    private SearchView meetingSearchView;
     private List<Meeting> allDetailedMeetings;
     private SimpleDateFormat csvDateFormatter;
 
@@ -98,7 +88,7 @@ public class MeetingActivity extends AppCompatActivity {
             }
         });
 
-        broadcastReceiver = new BroadcastReceiver() {
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 meetingsAdapter.refreshMeetings((List<FacilitatedMeeting>) dependency.getDependency(MODEL));
@@ -110,7 +100,7 @@ public class MeetingActivity extends AppCompatActivity {
         Intent pushIntent = new Intent(this, MeetingsService.class);
         this.startService(pushIntent);
 
-        meetingSearchView = findViewById(R.id.meeting_search_view);
+        SearchView meetingSearchView = findViewById(R.id.meeting_search_view);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         meetingSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         meetingSearchView.setSubmitButtonEnabled(false);
@@ -221,7 +211,7 @@ public class MeetingActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        meetingsRecyclerView = findViewById(R.id.meetings_recycler_view);
+        RecyclerView meetingsRecyclerView = findViewById(R.id.meetings_recycler_view);
         meetingsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         meetingsAdapter = new MeetingsAdapter(MeetingActivity.this);
         meetingsRecyclerView.setAdapter(meetingsAdapter);
